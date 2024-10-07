@@ -1,7 +1,24 @@
-from flask_sqlalchemy import SQLAlchemy
+# simple_app/models.py
+from supabase import create_client, Client
+import os
 
-db = SQLAlchemy()
+# Initialize Supabase client
+url = os.getenv("SUPABASE_URL")  # Set this in your environment variables
+key = os.getenv("SUPABASE_KEY")  # Set this in your environment variables
+supabase: Client = create_client(url, key)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
+class User:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+    @classmethod
+    def create(cls, name):
+        data = {"name": name}
+        response = supabase.table("users").insert(data).execute()
+        return cls(response.data[0]['id'], name)
+
+    @classmethod
+    def get_all(cls):
+        response = supabase.table("users").select("*").execute()
+        return [cls(user['id'], user['name']) for user in response.data]
