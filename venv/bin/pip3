@@ -1,4 +1,4 @@
-#!/Users/rex/testproject/simple_app/venv/bin/python3
+#!/Users/rex/testproject/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
